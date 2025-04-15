@@ -48,6 +48,10 @@ namespace Snake
                 y = y + offset;
             }
         }
+        public bool IsHit(Point p)
+        {
+            return p.x == x && p.y == this.y;
+        }
         public void Draw()
         {
             Console.SetCursorPosition(x, y);
