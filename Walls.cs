@@ -18,7 +18,7 @@ namespace Snake
 
             // Горизонтальная линия сверху и снизу
             HorizontalLine topLine = new HorizontalLine(0, mapWidth, 0, '═');
-            HorizontalLine bottomLine = new HorizontalLine(0, mapWidth, mapHeight-1, '═');
+            HorizontalLine bottomLine = new HorizontalLine(0, mapWidth, mapHeight, '═');
 
             // Вертикальная линия слева и справа
             VerticalLine leftLine = new VerticalLine(0, mapHeight, 0, '║');

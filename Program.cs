@@ -9,15 +9,15 @@ namespace Snake
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.SetWindowSize(80, 25);
+            Console.SetWindowSize(85, 30);
             Console.CursorVisible = false;
 
-            Walls walls = new Walls(80, 25); // Размер по умолчанию
-            walls.Draw();                    // Отрисовать рамку
+            Walls walls = new Walls(80, 25);    // Размер по умолчанию
+            walls.Draw();                                       // Отрисовать рамку
 
-            TitleScreen title = new TitleScreen();          // Новый экран
+            TitleScreen title = new TitleScreen(80,25);          // Новый экран
             ScoreManager scoreManager = new ScoreManager();
 
 
@@ -78,7 +78,7 @@ namespace Snake
             Snake snake = new Snake(p, 4, Direction.RIGHT);
             snake.Drow();
 
-            FoodCreator foodCreator = new FoodCreator(78, 24, '$');
+            FoodCreator foodCreator = new FoodCreator(77, 24, '$');
             Point food = foodCreator.CreateFood();
             FoodCreator.DrawFood(food); // с цветом
 

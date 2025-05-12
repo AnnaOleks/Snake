@@ -8,46 +8,90 @@ namespace Snake
 {
     internal class MenuManager
     {
-        public int ShowMainMenu()
+        // Метод для отображения меню и обработки выбора стрелками
+        public int ShowMenu()
         {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("=== ЗМЕЙКА ===");
-            Console.ResetColor();
-            Console.WriteLine("\n1. Играть");
-            Console.WriteLine("2. Показать рекорды");
-            Console.WriteLine("3. Выйти");
-            Console.Write("\nВыберите пункт: ");
-
-            int choice = 0;
-            while (true)
+            ConsoleKey key; // Переменная для хранения нажатой клавиши
+            int menuMaxWidth = menuItems.Max(item => item.Length);
+            int menuStartX = (mapWidth - menuMaxWidth - 2) / 2;
+            int menuStartY = logoStartY + logoHeight + 2;
+            do
             {
-                string input = Console.ReadLine();
-                if (int.TryParse(input, out choice) && choice >= 1 && choice <= 3)
-                    break;
-                Console.Write("Введите число 1-3: ");
+                // Перерисовываем все пункты меню
+                for (int i = 0; i < menuItems.Length; i++)
+                {
+                    Console.SetCursorPosition(menuStartX, menuStartY + i); // Позиция каждой строки
+                    if (i == selectedIndex)
+                    {
+                        // Если это выбранный пункт, выделяем цветом и добавляем стрелку
+                        Console.BackgroundColor = ConsoleColor.Cyan;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write($"> {menuItems[i]} ");
+                    }
+                    else
+                    {
+                        // Обычный (невыбранный) пункт
+                        Console.ResetColor();
+                        Console.Write($"  {menuItems[i]} ");
+                    }
+                }
+
+                // Читаем, какую клавишу нажал пользователь
+                key = Console.ReadKey(true).Key;
+
+                // Обработка клавиш
+                if (key == ConsoleKey.UpArrow)
+                    selectedIndex = (selectedIndex - 1 + menuItems.Length) % menuItems.Length;
+                else if (key == ConsoleKey.DownArrow)
+                    selectedIndex = (selectedIndex + 1) % menuItems.Length;
+
             }
-            return choice;
+            while (key != ConsoleKey.Enter); // Выходим из цикла, когда нажата клавиша Enter
+
+            Console.ResetColor();       // Убираем подсветку
+            return selectedIndex + 1;   // Возвращаем номер выбранного пункта (от 1 до 3)
         }
 
         public int ShowLevelMenu()
         {
-            Console.Clear();
-            Console.WriteLine("Выберите уровень сложности:");
-            Console.WriteLine("1. Лёгкий 🐢");
-            Console.WriteLine("2. Средний 🐍");
-            Console.WriteLine("3. Сложный ⚡");
-            Console.Write("\nВаш выбор: ");
+            string[] levels = { "Лёгкий 🐢", "Средний 🐍", "Сложный ⚡" };
+            int selected = 0;
 
-            int level = 0;
-            while (true)
+            int menuWidth = levels.Max(l => l.Length);
+            int startX = (80 - menuWidth - 2) / 2;
+            int startY = 12;
+
+            ConsoleKey key;
+
+            do
             {
-                string input = Console.ReadLine();
-                if (int.TryParse(input, out level) && level >= 1 && level <= 3)
-                    break;
-                Console.Write("Введите число 1-3: ");
-            }
-            return level;
+                for (int i = 0; i < levels.Length; i++)
+                {
+                    Console.SetCursorPosition(startX, startY + i);
+                    if (i == selected)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Cyan;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write($"> {levels[i]} ");
+                    }
+                    else
+                    {
+                        Console.ResetColor();
+                        Console.Write($"  {levels[i]} ");
+                    }
+                }
+
+                key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.UpArrow)
+                    selected = (selected - 1 + levels.Length) % levels.Length;
+                else if (key == ConsoleKey.DownArrow)
+                    selected = (selected + 1) % levels.Length;
+
+            } while (key != ConsoleKey.Enter);
+
+            Console.ResetColor();
+            return selected + 1; // вернёт 1..3
         }
         private void AnimatedPrint(string text, int delayMs = 15)
         {
