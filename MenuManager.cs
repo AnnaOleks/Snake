@@ -49,5 +49,14 @@ namespace Snake
             }
             return level;
         }
+        private void AnimatedPrint(string text, int delayMs = 15)
+        {
+            foreach (char c in text)
+            {
+                Console.Write(c);
+                Thread.Sleep(delayMs);
+            }
+            Console.WriteLine();
+        }
     }
 }

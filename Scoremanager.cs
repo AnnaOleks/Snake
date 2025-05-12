@@ -68,5 +68,13 @@ namespace Snake
         {
             Score = 0;
         }
+
+        public static void UpdateScorePanel(int score)
+        {
+            Console.SetCursorPosition(22, 1); // позиция "Очки: ..."
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"Очки: {score}    "); // подчистка
+            Console.ResetColor();
+        }
     }
 }

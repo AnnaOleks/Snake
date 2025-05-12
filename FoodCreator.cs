@@ -27,5 +27,13 @@ namespace Snake
             int y = random.Next(2, mapHeight - 2);
             return new Point(x, y, sym);
         }
+
+        public static void DrawFood(Point food)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(food.x, food.y);
+            Console.Write(food.sym);
+            Console.ResetColor();
+        }
     }
 }

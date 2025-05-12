@@ -11,18 +11,23 @@ namespace Snake
     {
         static void Main(string[] args)
         {
-            Console.SetWindowSize(85, 30);
+            Console.SetWindowSize(80, 25);
             Console.CursorVisible = false;
 
-            MenuManager menu = new MenuManager();
+            Walls walls = new Walls(80, 25); // Размер по умолчанию
+            walls.Draw();                    // Отрисовать рамку
+
+            TitleScreen title = new TitleScreen();          // Новый экран
             ScoreManager scoreManager = new ScoreManager();
+
 
             while (true)
             {
-                int choice = menu.ShowMainMenu();
+                int choice = title.Show();
 
                 if (choice == 1) // Играть
                 {
+                    MenuManager menu = new MenuManager();
                     int level = menu.ShowLevelMenu();
                     int speed = level switch
                     {
@@ -49,9 +54,23 @@ namespace Snake
 
         static void StartGame(int speed, ScoreManager scoreManager)
         {
-            scoreManager.Reset(); // обнуляем счёт перед началом
+            scoreManager.Reset();
             Console.Clear();
 
+            // Верхняя панель
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("╔══════════════════════════════════════════════════╗");
+            Console.Write("║ ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(" ЗМЕЙКА ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write(" | Очки: 0 ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("                           ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════╝");
+            Console.ResetColor();
+
+            // Отрисовка игровых границ
             Walls walls = new Walls(80, 25);
             walls.Draw();
 
@@ -61,7 +80,7 @@ namespace Snake
 
             FoodCreator foodCreator = new FoodCreator(78, 24, '$');
             Point food = foodCreator.CreateFood();
-            food.Draw();
+            FoodCreator.DrawFood(food); // с цветом
 
             while (true)
             {
@@ -70,9 +89,10 @@ namespace Snake
 
                 if (snake.Eat(food))
                 {
-                    scoreManager.AddPoint(); // +1 очко
+                    scoreManager.AddPoint();
+                    ScoreManager.UpdateScorePanel(scoreManager.Score);
                     food = foodCreator.CreateFood();
-                    food.Draw();
+                    FoodCreator.DrawFood(food);
                 }
                 else
                 {
@@ -88,6 +108,7 @@ namespace Snake
                 }
             }
 
+            // После проигрыша
             string playerName = "";
             while (playerName.Length < 3)
             {
