@@ -17,12 +17,12 @@ namespace Snake
             Console.ForegroundColor = ConsoleColor.Cyan;
 
             // Горизонтальная линия сверху и снизу
-            HorizontalLine topLine = new HorizontalLine(0, mapWidth, 0, '═');
+            HorizontalLine topLine = new HorizontalLine(0, mapWidth, 2, '═');
             HorizontalLine bottomLine = new HorizontalLine(0, mapWidth, mapHeight, '═');
 
             // Вертикальная линия слева и справа
-            VerticalLine leftLine = new VerticalLine(0, mapHeight, 0, '║');
-            VerticalLine rightLine = new VerticalLine(0, mapHeight, mapWidth, '║');
+            VerticalLine leftLine = new VerticalLine(2, mapHeight, 0, '║');
+            VerticalLine rightLine = new VerticalLine(2, mapHeight, mapWidth, '║');
 
             wallList.Add(topLine);
             wallList.Add(bottomLine);
@@ -34,12 +34,12 @@ namespace Snake
         {
             foreach (var wall in wallList)
             {
-                wall.Drow(); // Рисует каждую линию
+                wall.Draw(); // Рисует каждую линию
             }
 
             // Углы
-            Console.SetCursorPosition(0, 0); Console.Write("╔");
-            Console.SetCursorPosition(80, 0); Console.Write("╗");
+            Console.SetCursorPosition(0, 2); Console.Write("╔");
+            Console.SetCursorPosition(80, 2); Console.Write("╗");
             Console.SetCursorPosition(0, 25); Console.Write("╚");
             Console.SetCursorPosition(80, 25); Console.Write("╝");
         }

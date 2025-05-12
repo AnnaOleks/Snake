@@ -10,16 +10,13 @@ namespace Snake
     class Program
     {
         public static void Main(string[] args)
+        
         {
             Console.SetWindowSize(85, 30);
             Console.CursorVisible = false;
 
-            Walls walls = new Walls(80, 25);    // Размер по умолчанию
-            walls.Draw();                                       // Отрисовать рамку
-
-            TitleScreen title = new TitleScreen(80,25);          // Новый экран
-            ScoreManager scoreManager = new ScoreManager();
-
+            TitleScreen title = new TitleScreen(80, 25);
+            MenuManager menu = new MenuManager();
 
             while (true)
             {
@@ -27,24 +24,28 @@ namespace Snake
 
                 if (choice == 1) // Играть
                 {
-                    MenuManager menu = new MenuManager();
+                    Console.Clear();
+                    string playerName = PlayerNameScreen.Show();
+
                     int level = menu.ShowLevelMenu();
                     int speed = level switch
                     {
-                        1 => 150, // Легкий
-                        2 => 100, // Средний
-                        3 => 60   // Сложный
+                        1 => 150,
+                        2 => 100,
+                        3 => 60
                     };
 
-                    StartGame(speed, scoreManager); // Запуск игры
+                    var player = new Player(playerName);
+                    var engine = new GameEngine(speed, player);
+                    engine.Start();
                 }
-                else if (choice == 2) // Показать рекорды
+                else if (choice == 2)
                 {
-                    scoreManager.ShowTopScores(); // Выведет ТОП
+                    new ScoreManager().ShowTopScores();
                     Console.WriteLine("\nНажмите любую клавишу...");
                     Console.ReadKey();
                 }
-                else if (choice == 3) // Выйти
+                else if (choice == 3)
                 {
                     Console.WriteLine("Выход...");
                     break;
@@ -52,76 +53,19 @@ namespace Snake
             }
         }
 
-        static void StartGame(int speed, ScoreManager scoreManager)
+        private static string AskName()
         {
-            scoreManager.Reset();
-            Console.Clear();
-
-            // Верхняя панель
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("╔══════════════════════════════════════════════════╗");
-            Console.Write("║ ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(" ЗМЕЙКА ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write(" | Очки: 0 ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("                           ║");
-            Console.WriteLine("╚══════════════════════════════════════════════════╝");
-            Console.ResetColor();
-
-            // Отрисовка игровых границ
-            Walls walls = new Walls(80, 25);
-            walls.Draw();
-
-            Point p = new Point(4, 5, '*');
-            Snake snake = new Snake(p, 4, Direction.RIGHT);
-            snake.Drow();
-
-            FoodCreator foodCreator = new FoodCreator(77, 24, '$');
-            Point food = foodCreator.CreateFood();
-            FoodCreator.DrawFood(food); // с цветом
-
-            while (true)
+            string name;
+            do
             {
-                if (walls.IsHit(snake) || snake.IsHitTail())
-                    break;
+                Console.Write("Sisesta oma nimi: ");
+                name = Console.ReadLine();
+            } while (string.IsNullOrWhiteSpace(name));
 
-                if (snake.Eat(food))
-                {
-                    scoreManager.AddPoint();
-                    ScoreManager.UpdateScorePanel(scoreManager.Score);
-                    food = foodCreator.CreateFood();
-                    FoodCreator.DrawFood(food);
-                }
-                else
-                {
-                    snake.Move();
-                }
-
-                Thread.Sleep(speed);
-
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo key = Console.ReadKey(true);
-                    snake.HandleKey(key.Key);
-                }
-            }
-
-            // После проигрыша
-            string playerName = "";
-            while (playerName.Length < 3)
-            {
-                Console.Write("Введите имя (минимум 3 символа): ");
-                playerName = Console.ReadLine();
-            }
-
-            scoreManager.SaveScore(playerName);
-            scoreManager.ShowTopScores();
-
-            Console.WriteLine("\nНажмите любую клавишу...");
-            Console.ReadKey();
+            return name;
         }
     }
+
 }
+
      

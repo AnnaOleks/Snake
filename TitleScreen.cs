@@ -10,15 +10,15 @@ namespace Snake
     internal class TitleScreen
     {
         // Массив с пунктами главного меню
-        public string[] menuItems = { "Mängima", "Rekordid", "Välju" };
+        private string[] menuItems = { "Mängima", "Rekordid", "Välju" };
         // Индекс выбранного пункта меню (по умолчанию — первый)
-        public int selectedIndex = 0;
+        private int selectedIndex = 0;
 
-        public int mapWidth;
-        public int mapHeight;
+        private int mapWidth;
+        private int mapHeight;
 
-        public int logoStartY = 7;
-        public int logoHeight = 6;
+        private int logoStartY = 7;
+        private int logoHeight = 6;
 
         public TitleScreen(int width, int height)
         {
@@ -29,7 +29,7 @@ namespace Snake
         // Метод, который отображает титульный экран и возвращает выбранный пункт
         public int Show()
         {
-            ClearContentInsideFrame();  // очищаем центр
+            Utility.ClearContentArea(80, 25);  // очищаем центр
 
             // Массив строк для логотипа SNACE (ASCII-art)
             string[] logo = new string[]
@@ -60,15 +60,7 @@ namespace Snake
 
             return ShowMenu();
         }
-        private void ClearContentInsideFrame()
-        {
-            // Очищаем только то, что внутри рамки 
-            for (int y = 1; y < mapHeight - 1; y++) // строки
-            {
-                Console.SetCursorPosition(1, y);   // отступ от левого края рамки
-                Console.Write(new string(' ', mapWidth - 2));
-            }
-        }
+      
 
         // Метод анимированного вывода названия
         private void AnimateMenu()
@@ -87,7 +79,49 @@ namespace Snake
         }
 
 
-        
+        // Метод для отображения меню и обработки выбора стрелками
+        private int ShowMenu()
+        {
+            ConsoleKey key; // Переменная для хранения нажатой клавиши
+            int menuMaxWidth = menuItems.Max(item => item.Length);
+            int menuStartX = (mapWidth - menuMaxWidth - 2) / 2;
+            int menuStartY = logoStartY + logoHeight + 2;
+            do
+            {
+                // Перерисовываем все пункты меню
+                for (int i = 0; i < menuItems.Length; i++)
+                {
+                    Console.SetCursorPosition(menuStartX, menuStartY + i); // Позиция каждой строки
+                    if (i == selectedIndex)
+                    {
+                        // Если это выбранный пункт, выделяем цветом и добавляем стрелку
+                        Console.BackgroundColor = ConsoleColor.Cyan;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write($"> {menuItems[i]} ");
+                    }
+                    else
+                    {
+                        // Обычный (невыбранный) пункт
+                        Console.ResetColor();
+                        Console.Write($"  {menuItems[i]} ");
+                    }
+                }
+
+                // Читаем, какую клавишу нажал пользователь
+                key = Console.ReadKey(true).Key;
+
+                // Обработка клавиш
+                if (key == ConsoleKey.UpArrow)
+                    selectedIndex = (selectedIndex - 1 + menuItems.Length) % menuItems.Length;
+                else if (key == ConsoleKey.DownArrow)
+                    selectedIndex = (selectedIndex + 1) % menuItems.Length;
+
+            } 
+            while (key != ConsoleKey.Enter); // Выходим из цикла, когда нажата клавиша Enter
+
+            Console.ResetColor();       // Убираем подсветку
+            return selectedIndex + 1;   // Возвращаем номер выбранного пункта (от 1 до 3)
+        }
     }
 }
 
