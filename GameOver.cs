@@ -18,13 +18,13 @@ namespace Snake
             int startX = (mapWidth - panelWidth) / 2;
             int startY = 10;
 
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Cyan;
 
             // Верхняя рамка
             Console.SetCursorPosition(startX, startY);
             Console.Write("╔" + new string('═', panelWidth - 2) + "╗");
 
-            // Заголовок с анимацией
+            // Заголовок
             Console.SetCursorPosition(startX, startY + 1);
             Console.Write("║");
             Console.ForegroundColor = ConsoleColor.White;
@@ -33,7 +33,7 @@ namespace Snake
                 Console.Write(c);
                 Thread.Sleep(60);
             }
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write(new string(' ', panelWidth - 2 - title.Length));
             Console.Write("║");
 
@@ -41,22 +41,21 @@ namespace Snake
             Console.SetCursorPosition(startX, startY + 2);
             Console.Write("╠" + new string('═', panelWidth - 2) + "╣");
 
-            // Строка со счётом
+            // Счёт
             Console.SetCursorPosition(startX, startY + 3);
             Console.Write("║");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write(scoreLine);
             Console.Write(new string(' ', panelWidth - 2 - scoreLine.Length));
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("║");
 
-            // Строка с именем
+            // Имя игрока
             Console.SetCursorPosition(startX, startY + 4);
             Console.Write("║");
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(nameLine);
-            Console.Write(new string(' ', panelWidth - 2 - nameLine.Length));
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(nameLine + " ");
+            Console.Write(new string(' ', panelWidth - 2 - nameLine.Length - 1)); // учли пробел
             Console.Write("║");
 
             // Нижняя рамка
@@ -64,6 +63,16 @@ namespace Snake
             Console.Write("╚" + new string('═', panelWidth - 2) + "╝");
 
             Console.ResetColor();
+
+            // Вывод надписи под рамкой, по центру
+            string pressKeyLine = "Vajuta klahvi...";
+            int promptX = (mapWidth - pressKeyLine.Length) / 2;
+            Console.SetCursorPosition(promptX, startY + 7);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine(pressKeyLine);
+            Console.ResetColor();
+
+            Console.ReadKey();
         }
     }
 }

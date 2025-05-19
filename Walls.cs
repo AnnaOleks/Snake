@@ -62,12 +62,27 @@ namespace Snake
         public void AddRandomWalls(int count)
         {
             Random rand = new Random();
+            Console.ForegroundColor = ConsoleColor.Cyan;
             for (int i = 0; i < count; i++)
             {
-                int x = rand.Next(4, 76); // немного отступаем от краёв
-                int y = rand.Next(4, 22);
-                HorizontalLine line = new HorizontalLine(x, x + 3, y, '■'); // горизонтальная мини-стенка
-                wallList.Add(line);
+                bool isHorizontal = rand.Next(2) == 0;
+
+                if (isHorizontal)
+                {
+                    int x = rand.Next(2, 76); // максимум 76, чтобы x+3 = 79
+                    int y = rand.Next(3, 22); // 3–21, не задеваем верх/низ
+                    HorizontalLine line = new HorizontalLine(x, x + 4, y, '═');
+                    wallList.Add(line);
+                    line.Draw();
+                }
+                else
+                {
+                    int x = rand.Next(2, 78); // почти до правой стенки
+                    int y = rand.Next(3, 19); // максимум 19, чтобы y+3 = 22
+                    VerticalLine line = new VerticalLine(y, y + 4, x, '║');
+                    wallList.Add(line);
+                    line.Draw();
+                }
             }
         }
     }

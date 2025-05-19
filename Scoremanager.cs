@@ -8,7 +8,7 @@ namespace Snake
 {
     class ScoreManager
     {
-        private string filePath = "Nimed.txt"; // Путь к файлу
+        private string filePath = @"C:\\Users\\annao\\source\\repos\\Snake\\Nimed.txt"; // Путь к файлу
 
         public int Score { get; private set; } = 0;
 
@@ -23,7 +23,6 @@ namespace Snake
         {
             try
             {
-                // Формат: имя;очки
                 string record = $"{playerName};{Score}";
                 File.AppendAllText(filePath, record + Environment.NewLine);
             }
@@ -34,11 +33,11 @@ namespace Snake
         }
 
         // Показать ТОП N игроков
-        public void ShowTopScores(int topN = 10)
+        public void ShowTopScoresStyled(int topN = 10, int mapWidth = 80)
         {
             if (!File.Exists(filePath))
             {
-                Console.WriteLine("Рекорды пока не сохранены.");
+                Console.WriteLine("Rekordid ei ole veel salvestatud.");
                 return;
             }
 
@@ -54,13 +53,33 @@ namespace Snake
                 }
             }
 
-            var sorted = scoreList.OrderByDescending(p => p.Points).Take(topN);
+            var sorted = scoreList
+                .OrderByDescending(p => p.Points)
+                .Take(topN)
+                .ToList();
 
-            Console.WriteLine("\n--- ТОП ИГРОКОВ ---");
-            foreach (var entry in sorted)
+            Console.Clear();
+            string title = "TOP Mängijad:";
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            int startY = 10;
+
+            int titleX = (mapWidth - title.Length) / 2;
+            Console.SetCursorPosition(titleX, startY - 2);
+            Utility.AnimateText(title, 30);
+
+            for (int i = 0; i < sorted.Count; i++)
             {
-                Console.WriteLine($"{entry.Name}: {entry.Points} очков");
+                Console.ResetColor();
+                string line = $"{i + 1}. {sorted[i].Name} - {sorted[i].Points} punkt(i)";
+                int lineX = (mapWidth - line.Length - 2) / 2;
+                Console.SetCursorPosition(lineX, startY + i);
+                Console.Write(" " + line + " ");
+                Console.ResetColor();
             }
+
+            Console.SetCursorPosition((mapWidth - 26) / 2, startY + sorted.Count + 2);
+            Console.WriteLine("Vajuta klahvi, et tagasi minna...");
+            Console.ReadKey();
         }
 
         // Обнуление счёта
@@ -68,7 +87,5 @@ namespace Snake
         {
             Score = 0;
         }
-
-        
     }
 }

@@ -25,12 +25,15 @@ namespace Snake
 
         public int GetInitialSpeed() => initialSpeed;
 
-        public int AdjustSpeed(int score)
+        public int AdjustSpeed(int score, int currentSpeed)
         {
             if (Level >= 2 && score > 0 && score % 5 == 0)
-                return Math.Max(30, initialSpeed - (score / 5) * 10); // уменьшаем задержку
+            {
+                int newSpeed = currentSpeed - 10;
+                return Math.Max(30, newSpeed); // ограничиваем минимальной скоростью
+            }
 
-            return initialSpeed;
+            return currentSpeed;
         }
 
         public bool ShouldAddRandomWall(int score)

@@ -28,23 +28,22 @@ namespace Snake
             Console.WriteLine();
         }
 
-        public static void DrawTopPanel(int score, string playerName, int width = 80)
+        public static void DrawTopPanel(int score, string playerName, int currentSpeed, int width = 80)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
 
-            // Верхняя рамка панели
-            
             Console.SetCursorPosition(0, 1);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write($" Mängija: {playerName}");
+            string playerText = $" Mängija: {playerName}";
+            string scoreText = $"Punktid: {score}";
+            string speedText = $"Kiirus: {currentSpeed}ms";
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            string scoreText = $"Punktid: {score} ";
-            int padding = width - 2 - $" Mängija: {playerName}".Length - scoreText.Length;
+            int padding = width - 2 - playerText.Length - scoreText.Length - speedText.Length;
+            if (padding < 0) padding = 0;
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write(new string(' ', padding));
+            Console.Write(playerText);
+            Console.Write(new string(' ', padding / 2));
             Console.Write(scoreText);
+            Console.Write("  " + speedText);
 
             Console.ResetColor();
         }
