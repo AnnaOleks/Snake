@@ -69,7 +69,7 @@ namespace Snake
                 {
                     snake.Move();
                 }
-
+                 
                 Thread.Sleep(speed);
 
                 if (Console.KeyAvailable)
