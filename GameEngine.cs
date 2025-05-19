@@ -20,13 +20,18 @@ namespace Snake
         private FoodCreator foodCreator;
         private Point food;
 
-        public GameEngine(int speed, Player player)
+        private readonly DifficultyManager difficulty;
+        private int currentSpeed;
+        private int lastMilestone = 0; // отслеживает предыдущую отметку по очкам
+
+        public GameEngine(Player player, DifficultyManager difficulty)
         {
             this.width = 80;
             this.height = 25;
-            this.speed = speed;
+            this.difficulty = difficulty;
             this.player = player;
             this.scoreManager = new ScoreManager();
+            this.currentSpeed = difficulty.GetInitialSpeed();
         }
 
         public void Start()
@@ -36,6 +41,10 @@ namespace Snake
 
             Utility.DrawTopPanel(scoreManager.Score, player.Name);
             walls = new Walls(width, height);
+            if (difficulty.ShouldAddRandomWall(0)) // не добавит, если уровень < 3
+            {
+                walls.AddRandomWalls(1);
+            }
             walls.Draw();
 
             Point start = new Point(4, 5, '■');
@@ -45,6 +54,7 @@ namespace Snake
             foodCreator = new FoodCreator(width, height, '$');
             var forbiddenPoints = walls.GetAllPoints().Concat(snake.GetPoints()).ToList();
             food = foodCreator.CreateFood(forbiddenPoints);
+            FoodCreator.DrawFood(food); // Показываем еду на экране
 
             GameLoop();
         }
@@ -76,6 +86,20 @@ namespace Snake
                 {
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     snake.HandleKey(key.Key);
+                }
+                // Увеличиваем скорость, если нужно
+                currentSpeed = difficulty.AdjustSpeed(scoreManager.Score);
+
+                // Добавляем рандомную стену, если нужно
+                if (difficulty.ShouldAddRandomWall(scoreManager.Score) && scoreManager.Score > lastMilestone)
+                {
+                    walls.AddRandomWalls(1);
+                    lastMilestone = scoreManager.Score;
+
+                    // Пересоздаём еду с учётом новой стены
+                    var forbiddenPoints = walls.GetAllPoints().Concat(snake.GetPoints()).ToList();
+                    food = foodCreator.CreateFood(forbiddenPoints);
+                    FoodCreator.DrawFood(food);
                 }
             }
 

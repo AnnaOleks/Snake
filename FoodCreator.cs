@@ -45,7 +45,7 @@ namespace Snake
 
         public static void DrawFood(Point food)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.SetCursorPosition(food.x, food.y);
             Console.Write(food.sym);
             Console.ResetColor();

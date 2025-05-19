@@ -59,5 +59,16 @@ namespace Snake
         {
             return wallList.SelectMany(wall => wall.GetPoints()).ToList();
         }
+        public void AddRandomWalls(int count)
+        {
+            Random rand = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                int x = rand.Next(4, 76); // немного отступаем от краёв
+                int y = rand.Next(4, 22);
+                HorizontalLine line = new HorizontalLine(x, x + 3, y, '■'); // горизонтальная мини-стенка
+                wallList.Add(line);
+            }
+        }
     }
 }
