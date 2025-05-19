@@ -55,5 +55,9 @@ namespace Snake
             }
             return false;
         }
+        public List<Point> GetAllPoints()
+        {
+            return wallList.SelectMany(wall => wall.GetPoints()).ToList();
+        }
     }
 }

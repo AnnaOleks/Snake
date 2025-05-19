@@ -10,6 +10,7 @@ namespace Snake
     {
         protected List<Point> pList;
 
+        
         public void Draw()
         {
             foreach (Point p in pList)
@@ -40,6 +41,10 @@ namespace Snake
                 }
             }
             return false;
+        }
+        public List<Point> GetPoints()
+        {
+            return pList;
         }
     }
 }

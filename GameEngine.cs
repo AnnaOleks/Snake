@@ -38,13 +38,13 @@ namespace Snake
             walls = new Walls(width, height);
             walls.Draw();
 
-            Point start = new Point(4, 5, '*');
+            Point start = new Point(4, 5, '■');
             snake = new Snake(start, 4, Direction.RIGHT);
             snake.Draw();
 
-            foodCreator = new FoodCreator(width - 3, height - 1, '$');
-            food = foodCreator.CreateFood();
-            FoodCreator.DrawFood(food);
+            foodCreator = new FoodCreator(width, height, '$');
+            var forbiddenPoints = walls.GetAllPoints().Concat(snake.GetPoints()).ToList();
+            food = foodCreator.CreateFood(forbiddenPoints);
 
             GameLoop();
         }
@@ -60,7 +60,9 @@ namespace Snake
                 {
                     scoreManager.AddPoint();
                     Utility.DrawTopPanel(scoreManager.Score, player.Name);
-                    food = foodCreator.CreateFood();
+
+                    var forbiddenPoints = walls.GetAllPoints().Concat(snake.GetPoints()).ToList();
+                    food = foodCreator.CreateFood(forbiddenPoints);
                     FoodCreator.DrawFood(food);
                 }
                 else
@@ -86,7 +88,7 @@ namespace Snake
             GameOver.ShowGameOverPanel(scoreManager.Score, player.Name);
             scoreManager.ShowTopScores();
 
-            Console.WriteLine("\nНажмите любую клавишу...");
+            Console.WriteLine("\nVajuta klahvi...");
             Console.ReadKey();
         }
     }

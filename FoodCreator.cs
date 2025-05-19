@@ -21,16 +21,22 @@ namespace Snake
             this.sym = sym;
         }
 
-        public Point CreateFood()
+        public Point CreateFood(List<Point> forbiddenPoints)
         {
-            int x = random.Next(2, mapWidth-2);
-            int y = random.Next(2, mapHeight - 5);
-            return new Point(x, y, sym);
+            Point food;
+            do
+            {
+                int x = random.Next(2, mapWidth - 2);
+                int y = random.Next(3, mapHeight - 2);
+                food = new Point(x, y, sym);
+            } while (forbiddenPoints.Any(p => p.IsHit(food)));
+
+            return food;
         }
 
         public static void DrawFood(Point food)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.SetCursorPosition(food.x, food.y);
             Console.Write(food.sym);
             Console.ResetColor();
